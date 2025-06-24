@@ -525,6 +525,11 @@ class TestFlows(softest.TestCase):
             plan =_list.create_new_plan_domestic(working_date=working_date,working_persons="2",working_hours="3")
         elif user_name == "material1":
             plan = _list.create_new_plan_material(working_date=working_date,working_persons="4",working_hours=2)
+        chasis_numbers_add = ["NCP81G-98862716","RP1-82620976","GR7-87261154"]
+        plan.add_cars_by_chasis_number(chasis_numbers=chasis_numbers_add)
+        chasis_numbers_remove = ['RP1-82620976']
+        plan.removed_car_by_chasis_numbers(chasis_numbers_remove)
+
         #plan.cancel_product_plan()
         plan.confirm_product_plan()
         hp.logout()
@@ -676,6 +681,20 @@ class TestFlows(softest.TestCase):
 
 
 
+
+
+    def test_plan_only(self):
+        plan_date = datetime.now()
+        num_day = random.randint(0,3)
+        plan_date = plan_date + timedelta(days=num_day)
+        plan_date = plan_date.strftime('%Y/%m/%d')
+        plan_date = "2025/06/25"
+        generate_data = GenerateData(DATA_TEST_JAPAN_PATH, status=ASSORTED)
+        if generate_data.get_data_len() == 0:
+            return
+        data_obj = generate_data.get_data_by_index(0)
+        self.do_product_plan_tasks(user_name="production1", pass_word="123456", data_obj=data_obj,
+                                   working_date=plan_date)
 
 
 

@@ -73,6 +73,46 @@ class CreateProductPlan(BaseDriver):
     def cancel_product_plan(self):
         cancel_button = self.find_element(By.XPATH,self.BUTTON_CANCEL_PRODUCT_PLAN)
         cancel_button.click()
+    def add_cars_by_chasis_number(self,chasis_numbers=[]):
+        btn_add_car = self.find_element(By.XPATH, self.BUTTON_ADD_CAR)
+        btn_add_car.click()
+        time.sleep(2)
+        dialog_content = self.find_element(By.TAG_NAME, self.POPUP_ADD_CAR_TAG_NAME)
+        table_body = dialog_content.find_element(By.TAG_NAME, "tbody")
+        car_items = table_body.find_elements(By.TAG_NAME, "tr")
+        if len(car_items) <= 2:
+            buttons = dialog_content.find_elements(By.TAG_NAME, "button")
+            button_cancel = buttons[3]
+            button_cancel.click()
+            time.sleep(2)
+            return
+        for car_item in car_items:
+            columns = car_item.find_elements(By.TAG_NAME,"td")
+            chasis_num = columns[4].text
+            if chasis_num in chasis_numbers:
+                input = columns[0].find_element(By.TAG_NAME,"input")
+                input.click()
+        button_add = dialog_content.find_elements(By.TAG_NAME, "button")[1]
+        button_add.click()
+        time.sleep(3)
+    def removed_car_by_chasis_numbers(self,chasis_numbers=[]):
+        nz_table = self.find_element(By.TAG_NAME, "nz-table")
+        table_body = nz_table.find_element(By.TAG_NAME, "tbody")
+        car_items = table_body.find_elements(By.TAG_NAME, "tr")
+        for car_item in car_items:
+            columns = car_item.find_elements(By.TAG_NAME,"td")
+            if columns[4].text in chasis_numbers:
+                input = columns[0].find_element(By.TAG_NAME,"input")
+                input.click()
+        title_footer = nz_table.find_element(By.TAG_NAME,"nz-table-title-footer")
+        button_remove = title_footer.find_elements(By.TAG_NAME,"button")
+        if len(button_remove) > 0:
+            button_remove[0].click()
+
+
+
+
+
     def add_cars_by_select_in_list(self,number_of_cars):
         btn_add_car = self.find_element(By.XPATH,self.BUTTON_ADD_CAR)
         btn_add_car.click()
